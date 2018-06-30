@@ -3,10 +3,12 @@
     "env": {
         "browser": true
     },
-	"rules": {
-		"react/jsx-filename-extension": "false",
+    "rules": {
+        "react/jsx-filename-extension": "false",
         "react/prefer-stateless-function": "false",
         "react/jsx-one-expression-per-line": false,
-        "jsx-a11y/heading-has-content": false
-	}
+        "jsx-a11y/heading-has-content": false,
+        "import/no-extraneous-dependencies": false,
+        "react/destructuring-assignment": false
+    }
 }
