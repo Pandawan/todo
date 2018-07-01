@@ -1,5 +1,6 @@
 import firebase from '@firebase/app';
 import '@firebase/firestore';
+import '@firebase/auth';
 
 firebase.initializeApp({
   apiKey: 'AIzaSyA4gfEI7TAyHtwFYVZ_VRt-KJ9h6Re8Kks',
@@ -12,9 +13,20 @@ firebase.initializeApp({
 
 firebase.firestore().settings({ timestampsInSnapshots: true });
 
-export default firebase.firestore().enablePersistence()
+const firestore = firebase.firestore().enablePersistence()
   .then(() => firebase.firestore())
   .catch((error) => {
     console.error(error);
     return firebase.firestore();
   });
+
+const auth = firebase.auth();
+const provider = new firebase.auth.GoogleAuthProvider();
+
+export default firebase;
+
+export {
+  firestore,
+  auth,
+  provider,
+};
