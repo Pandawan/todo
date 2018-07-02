@@ -19,12 +19,32 @@ class ToDo extends Component {
     };
     firestore.then((db) => { this.db = db; });
 
-    this.getTodos = this.getTodos.bind(this);
-    this.handleSignIn = this.handleSignIn.bind(this);
-    this.handleSignOut = this.handleSignOut.bind(this);
-    this.submitTodoItem = this.submitTodoItem.bind(this);
+    this.onSignIn = this.onSignIn.bind(this);
+    this.onSignOut = this.onSignOut.bind(this);
     this.onAddOrUpdateTodo = this.onAddOrUpdateTodo.bind(this);
     this.onRemoveTodo = this.onRemoveTodo.bind(this);
+    this.submitTodoItem = this.submitTodoItem.bind(this);
+    this.getTodos = this.getTodos.bind(this);
+    this.handleMarkDone = this.handleMarkDone.bind(this);
+    this.handleRemove = this.handleRemove.bind(this);
+  }
+
+  // On SignIn
+  onSignIn(userId) {
+    localStorage.clear();
+    localStorage.setItem('userId', userId);
+    this.setState({ userId });
+    this.getTodos(userId);
+  }
+
+  // On SignOut
+  onSignOut() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+
+    localStorage.clear();
+    this.setState({ userId: '', todos: {} });
   }
 
   // Whenever there is an add or update operation, change todos object
@@ -67,31 +87,20 @@ class ToDo extends Component {
       });
   }
 
-  // On SignIn
-  handleSignIn(userId) {
-    localStorage.clear();
-    localStorage.setItem('userId', userId);
-    this.setState({ userId });
-    this.getTodos(userId);
+  handleMarkDone(todoId) {
+    this.db.collection(`users/${this.state.userId}/todos`).doc(todoId).update({ done: true })
+      .catch(this.dbError);
   }
 
-  // On SignOut
-  handleSignOut() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
-
-    localStorage.clear();
-    this.setState({ userId: '', todos: {} });
+  handleRemove(todoId) {
+    this.db.collection(`users/${this.state.userId}/todos`).doc(todoId).delete()
+      .catch(this.dbError);
   }
 
   // When the user submits a new item through form
   submitTodoItem(text) {
     if (this.state.userId && this.db) {
-      // Create new todo item
-      const key = Object.keys(this.state.todos).length;
       const value = {
-        id: key,
         name: text,
         done: false,
         created: firebase.firestore.FieldValue.serverTimestamp(),
@@ -104,9 +113,22 @@ class ToDo extends Component {
   }
 
   render() {
+    // If it hasn't loaded yet.
+    if (!this.db || !this.state.userId) {
+      return (
+        <div className="todo">
+          <p>Loading...</p>
+        </div>
+      );
+    }
+
     return (
       <div className="todo">
-        <List items={Object.values(this.state.todos)} />
+        <List
+          items={this.state.todos}
+          handleMarkDone={this.handleMarkDone}
+          handleRemove={this.handleRemove}
+        />
         <FormInput defaultText="" handleSubmit={this.submitTodoItem} />
       </div>
     );

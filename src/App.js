@@ -15,12 +15,12 @@ class App extends Component {
     if (user) {
       this.setState({ user });
       if (this.todo) {
-        this.todo.handleSignIn(user.uid);
+        this.todo.onSignIn(user.uid);
       }
     } else {
       this.setState({ user: null });
       if (this.todo) {
-        this.todo.handleSignOut();
+        this.todo.onSignOut();
       }
     }
   }
