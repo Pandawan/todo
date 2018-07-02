@@ -7,25 +7,31 @@ import './App.css';
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      user: null,
-    };
-
+    this.state = { user: null };
     this.authStateChanged = this.authStateChanged.bind(this);
   }
 
   authStateChanged(user) {
-    this.setState({ user });
+    if (user) {
+      this.setState({ user });
+      if (this.todo) {
+        this.todo.handleSignIn(user.uid);
+      }
+    } else {
+      this.setState({ user: null });
+      if (this.todo) {
+        this.todo.handleSignOut();
+      }
+    }
   }
 
   render() {
     return (
       <div className="app">
-        <h1>Hello World!</h1>
-        <Auth authStateChanged={this.authStateChanged} />
+        <h1>Hello{this.state.user ? `, ${this.state.user.displayName}` : ''}</h1>
         { this.state.user
-          ? <ToDo />
-          : ''
+          ? <ToDo ref={(instance) => { this.todo = instance; }} />
+          : <Auth authStateChanged={this.authStateChanged} />
         }
       </div>
     );

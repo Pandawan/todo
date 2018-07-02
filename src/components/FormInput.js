@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class List extends Component {
+class FormInput extends Component {
   constructor(props) {
     super(props);
+    this.state = { text: props.defaultText };
     this.submitForm = this.submitForm.bind(this);
     this.changeInput = this.changeInput.bind(this);
   }
@@ -11,11 +12,12 @@ class List extends Component {
   submitForm(e) {
     e.preventDefault();
     e.stopPropagation();
-    this.props.handleSubmit();
+    this.props.handleSubmit(this.state.text);
+    this.setState({ text: this.props.defaultText });
   }
 
   changeInput(e) {
-    this.props.handleChange(e.target.value);
+    this.setState({ text: e.target.value });
   }
 
   render() {
@@ -23,7 +25,7 @@ class List extends Component {
       <form onSubmit={this.submitForm}>
         <label htmlFor="new-todo">
           What needs to be done?
-          <input id="new-todo" onChange={this.changeInput} value={this.props.text} />
+          <input id="new-todo" onChange={this.changeInput} value={this.state.text} autoComplete="off" />
         </label>
         <button type="submit">
           Add
@@ -33,10 +35,9 @@ class List extends Component {
   }
 }
 
-List.propTypes = {
+FormInput.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  text: PropTypes.string.isRequired,
+  defaultText: PropTypes.string.isRequired,
 };
 
-export default List;
+export default FormInput;

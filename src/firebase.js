@@ -11,21 +11,21 @@ firebase.initializeApp({
   messagingSenderId: '607629250598',
 });
 
+/* Firestore Setup */
 firebase.firestore().settings({ timestampsInSnapshots: true });
 
 const firestore = firebase.firestore().enablePersistence()
   .then(() => firebase.firestore())
-  .catch((error) => {
-    console.error(error);
-    return firebase.firestore();
-  });
+  .catch(() => firebase.firestore());
 
+/* Authentication Setup */
 const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
 
 export default firebase;
 
 export {
+  firebase,
   firestore,
   auth,
   provider,

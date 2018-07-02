@@ -30,10 +30,10 @@ class Auth extends Component {
     auth.signInWithRedirect(provider).then((result) => {
       const { user } = result;
       this.setState({ user, error: '' });
-      localStorage.setItem('userid', user.id);
+      localStorage.setItem('userId', user.uid);
     }).catch((error) => {
       console.error(`SignIn Error: ${error}`);
-      this.setState({ error });
+      this.setState({ user: null, error });
     });
   }
 
