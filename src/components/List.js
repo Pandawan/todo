@@ -4,17 +4,17 @@ import Task from './Task';
 
 class List extends Component {
   render() {
-    const todosIds = Object.keys(this.props.items);
+    const taskIds = Object.keys(this.props.items);
     return (
       <ul className="list">
-        {todosIds.map((todoId) => {
-          const item = this.props.items[todoId];
+        {taskIds.map((taskId) => {
+          const item = this.props.items[taskId];
           return (
             <Task
-              key={todoId}
+              key={taskId}
               item={item}
-              handleMarkDone={() => { this.props.handleMarkDone(todoId); }}
-              handleRemove={() => { this.props.handleRemove(todoId); }}
+              handleMarkDone={() => { this.props.handleMarkDone(taskId); }}
+              handleRemove={() => { this.props.handleRemove(taskId); }}
             />
           );
         })}

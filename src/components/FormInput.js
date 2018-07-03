@@ -23,9 +23,9 @@ class FormInput extends Component {
   render() {
     return (
       <form onSubmit={this.submitForm}>
-        <label htmlFor="new-todo">
+        <label htmlFor="new-task">
           What needs to be done?
-          <input id="new-todo" onChange={this.changeInput} value={this.state.text} autoComplete="off" />
+          <input id="new-task" onChange={this.changeInput} value={this.state.text} autoComplete="off" />
         </label>
         <button type="submit">
           Add

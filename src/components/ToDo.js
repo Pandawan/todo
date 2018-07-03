@@ -15,16 +15,16 @@ class ToDo extends Component {
     super(props);
     this.state = {
       userId: localStorage.getItem('userId') || '',
-      todos: JSON.parse(localStorage.getItem('todos')) || {},
+      tasks: JSON.parse(localStorage.getItem('tasks')) || {},
     };
     firestore.then((db) => { this.db = db; });
 
     this.onSignIn = this.onSignIn.bind(this);
     this.onSignOut = this.onSignOut.bind(this);
-    this.onAddOrUpdateTodo = this.onAddOrUpdateTodo.bind(this);
-    this.onRemoveTodo = this.onRemoveTodo.bind(this);
-    this.submitTodoItem = this.submitTodoItem.bind(this);
-    this.getTodos = this.getTodos.bind(this);
+    this.onAddOrUpdateTask = this.onAddOrUpdateTask.bind(this);
+    this.onRemoveTask = this.onRemoveTask.bind(this);
+    this.handleAddTask = this.handleAddTask.bind(this);
+    this.getTasks = this.getTasks.bind(this);
     this.handleMarkDone = this.handleMarkDone.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
   }
@@ -34,7 +34,7 @@ class ToDo extends Component {
     localStorage.clear();
     localStorage.setItem('userId', userId);
     this.setState({ userId });
-    this.getTodos(userId);
+    this.getTasks(userId);
   }
 
   // On SignOut
@@ -44,61 +44,61 @@ class ToDo extends Component {
     }
 
     localStorage.clear();
-    this.setState({ userId: '', todos: {} });
+    this.setState({ userId: '', tasks: {} });
   }
 
-  // Whenever there is an add or update operation, change todos object
-  onAddOrUpdateTodo(snapshot) {
+  // Whenever there is an add or update operation, change tasks object
+  onAddOrUpdateTask(snapshot) {
     this.setState(state => ({
-      todos: {
-        ...state.todos,
+      tasks: {
+        ...state.tasks,
         [snapshot.id]: snapshot.data(),
       },
-    }), () => localStorage.setItem('todos', JSON.stringify(this.state.todos)));
+    }), () => localStorage.setItem('tasks', JSON.stringify(this.state.tasks)));
   }
 
-  // Whenever there is a remove operation, change todos object
-  onRemoveTodo(snapshot) {
+  // Whenever there is a remove operation, change tasks object
+  onRemoveTask(snapshot) {
     this.setState((state) => {
-      const todos = { ...state.todos };
-      delete todos[snapshot.id];
-      return { todos };
+      const tasks = { ...state.tasks };
+      delete tasks[snapshot.id];
+      return { tasks };
     }, () => {
-      localStorage.setItem('todos', JSON.stringify(this.state.todos));
+      localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
     });
   }
 
   // Start fetching/updating database (create connection that remains open)
-  getTodos(userId, attempt = 1) {
+  getTasks(userId, attempt = 1) {
     if (!this.db) {
-      setTimeout(() => this.getTodos(userId, attempt + 1), 1000 * attempt);
+      setTimeout(() => this.getTasks(userId, attempt + 1), 1000 * attempt);
       return;
     }
 
-    this.unsubscribe = this.db.collection(`users/${userId}/todos`)
+    this.unsubscribe = this.db.collection(`users/${userId}/tasks`)
       .orderBy('created')
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          if (change.type === 'added') return this.onAddOrUpdateTodo(change.doc);
-          if (change.type === 'modified') return this.onAddOrUpdateTodo(change.doc);
-          if (change.type === 'removed') return this.onRemoveTodo(change.doc);
+          if (change.type === 'added') return this.onAddOrUpdateTask(change.doc);
+          if (change.type === 'modified') return this.onAddOrUpdateTask(change.doc);
+          if (change.type === 'removed') return this.onRemoveTask(change.doc);
           return null;
         });
       });
   }
 
-  handleMarkDone(todoId) {
-    this.db.collection(`users/${this.state.userId}/todos`).doc(todoId).update({ done: true })
+  handleMarkDone(taskId) {
+    this.db.collection(`users/${this.state.userId}/tasks`).doc(taskId).update({ done: true })
       .catch(this.dbError);
   }
 
-  handleRemove(todoId) {
-    this.db.collection(`users/${this.state.userId}/todos`).doc(todoId).delete()
+  handleRemove(taskId) {
+    this.db.collection(`users/${this.state.userId}/tasks`).doc(taskId).delete()
       .catch(this.dbError);
   }
 
   // When the user submits a new item through form
-  submitTodoItem(text) {
+  handleAddTask(text) {
     if (this.state.userId && this.db) {
       const value = {
         name: text,
@@ -106,30 +106,21 @@ class ToDo extends Component {
         created: firebase.firestore.FieldValue.serverTimestamp(),
       };
       // Update on firestore
-      this.db.collection(`users/${this.state.userId}/todos`).add(value).catch(this.dbError);
+      this.db.collection(`users/${this.state.userId}/tasks`).add(value).catch(this.dbError);
     } else {
       this.dbError(new Error(`Could not find ${this.state.userId ? '' : 'userId, '}${this.db ? '' : 'db,'} please try again.`));
     }
   }
 
   render() {
-    // If it hasn't loaded yet.
-    if (!this.db || !this.state.userId) {
-      return (
-        <div className="todo">
-          <p>Loading...</p>
-        </div>
-      );
-    }
-
     return (
       <div className="todo">
         <List
-          items={this.state.todos}
+          items={this.state.tasks}
           handleMarkDone={this.handleMarkDone}
           handleRemove={this.handleRemove}
         />
-        <FormInput defaultText="" handleSubmit={this.submitTodoItem} />
+        <FormInput defaultText="" handleSubmit={this.handleAddTask} />
       </div>
     );
   }

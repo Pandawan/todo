@@ -5,11 +5,11 @@ import './Task.css';
 class Task extends Component {
   render() {
     return (
-      <li className="todo-item">
-        <p className={this.props.item.done ? 'todo-name todo-done' : 'todo-name'}>{this.props.item.name}</p>
+      <li className="task-item">
+        <p className={this.props.item.done ? 'task-name task-done' : 'task-name'}>{this.props.item.name}</p>
         { this.props.item.done
-          ? <button type="button" className="todo-remove-button" onClick={this.props.handleRemove}>Remove</button>
-          : <button type="button" className="todo-done-button" onClick={this.props.handleMarkDone}>Done</button>
+          ? <button type="button" className="task-remove-button" onClick={this.props.handleRemove}>Remove</button>
+          : <button type="button" className="task-done-button" onClick={this.props.handleMarkDone}>Done</button>
         }
       </li>
     );
