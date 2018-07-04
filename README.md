@@ -1,7 +1,11 @@
 # ToDo
-A simple todo app for myself
+A simple todo app to learn React & PWA.  
+It syncs automatically with firebase, and uses Google SignIn to save user data.
+
+![Screenshot of the app](https://i.imgur.com/WQLVXiX.png)
 
 ## TODO (ironic)
+- Add nice icons for Add, Remove, and Done
 - Add iOS PWA support see [this guide](https://blog.truthlabs.com/building-a-progressive-web-app-in-react-11c77a7fccb3)
 
 ## Resources
