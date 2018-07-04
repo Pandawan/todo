@@ -1,6 +1,6 @@
 # ToDo
-A simple todo app to learn React & PWA.  
-It syncs automatically with firebase, and uses Google SignIn to save user data.
+A simple todo list web app to learn React & PWA.  
+It syncs automatically using Firebase and Google SignIn.
 
 ![Screenshot of the app](https://i.imgur.com/WQLVXiX.png)
 
