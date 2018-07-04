@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import './FormInput.css';
+
 class FormInput extends Component {
   constructor(props) {
     super(props);
@@ -12,8 +14,11 @@ class FormInput extends Component {
   submitForm(e) {
     e.preventDefault();
     e.stopPropagation();
-    this.props.handleSubmit(this.state.text);
-    this.setState({ text: this.props.defaultText });
+    // Make sure it's not just empty text
+    if (this.state.text.trim()) {
+      this.props.handleSubmit(this.state.text);
+      this.setState({ text: this.props.defaultText });
+    }
   }
 
   changeInput(e) {
@@ -22,15 +27,16 @@ class FormInput extends Component {
 
   render() {
     return (
-      <form onSubmit={this.submitForm}>
-        <label htmlFor="new-task">
-          What needs to be done?
-          <input id="new-task" onChange={this.changeInput} value={this.state.text} autoComplete="off" />
-        </label>
-        <button type="submit">
-          Add
-        </button>
-      </form>
+      <div className="form-container container">
+        <form className="form-main" onSubmit={this.submitForm}>
+          <div className="form-body">
+            <div className="form-content">
+              <input id="new-task" className="form-input" onChange={this.changeInput} value={this.state.text} autoComplete="off" placeholder="What needs to be done?" />
+            </div>
+            <button className="form-add" type="submit">Add</button>
+          </div>
+        </form>
+      </div>
     );
   }
 }

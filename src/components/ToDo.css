@@ -1,0 +1,39 @@
+.todo {
+  background-color: white;
+}
+
+.header {
+  background: linear-gradient( rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) ), url('https://source.unsplash.com/collection/1364150');
+  background-size: cover;
+  background-position: 50%;
+  width: 100%;
+  height: 15em;
+}
+
+.header-content {
+  color: white;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header-title {
+  padding-left: 1em;
+}
+
+.header-content h1 {
+  margin: 0.25em 0;
+}
+
+.header-content h3 {
+  margin: 0;
+  font-weight: 300;
+}
+
+@media only screen and (max-width: 768px) {
+  .header {
+    height: 10em;
+  }
+}

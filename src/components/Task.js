@@ -3,14 +3,35 @@ import PropTypes from 'prop-types';
 import './Task.css';
 
 class Task extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      done: this.props.item.done,
+    };
+    this.handleMarkDone = this.handleMarkDone.bind(this);
+  }
+
+  componentWillReceiveProps(props) {
+    if (this.state.done !== props.item.done) {
+      this.setState({ done: this.props.item.done });
+    }
+  }
+
+  handleMarkDone(e) {
+    this.setState({ done: e.target.checked });
+    this.props.handleMarkDone(e.target.checked);
+  }
+
   render() {
     return (
       <li className="task-item">
-        <p className={this.props.item.done ? 'task-name task-done' : 'task-name'}>{this.props.item.name}</p>
-        { this.props.item.done
-          ? <button type="button" className="task-remove-button" onClick={this.props.handleRemove}>Remove</button>
-          : <button type="button" className="task-done-button" onClick={this.props.handleMarkDone}>Done</button>
-        }
+        <div className="task-body">
+          <input className="task-done-button" type="checkbox" value="done" checked={this.state.done} onChange={this.handleMarkDone} />
+          <div className="task-content">
+            <p className={this.state.done ? 'task-name task-done' : 'task-name'}>{this.props.item.name}</p>
+          </div>
+          <button className="task-remove-button" type="button" onClick={this.props.handleRemove}>Remove</button>
+        </div>
       </li>
     );
   }

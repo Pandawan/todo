@@ -6,14 +6,14 @@ class List extends Component {
   render() {
     const taskIds = Object.keys(this.props.items);
     return (
-      <ul className="list">
+      <ul className="task-list container">
         {taskIds.map((taskId) => {
           const item = this.props.items[taskId];
           return (
             <Task
               key={taskId}
               item={item}
-              handleMarkDone={() => { this.props.handleMarkDone(taskId); }}
+              handleMarkDone={(done) => { this.props.handleMarkDone(taskId, done); }}
               handleRemove={() => { this.props.handleRemove(taskId); }}
             />
           );

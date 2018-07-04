@@ -1,8 +1,44 @@
-.task-item * {
- display: inline; 
- margin: 0 0.5em;
+.task-list {
+  margin: 0 0.75em;
+  margin-top: 0.25em;
+  padding: 0;
 }
 
-.task-item .task-done {
+.task-item {
+  list-style: none;
+}
+
+.task-item, .task-body {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.task-body {
+  padding: 0 0.75em;
+  width: 100%;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  box-shadow: 0 17px 0 -16px rgba(0,0,0,.1);
+}
+
+.task-done-button {
+  cursor: pointer;
+  width: 1.75em;
+  height: 1.75em;
+  margin: 0.5em;
+}
+
+.task-content {
+  flex: 1;
+  padding: 0.75em 1em;
+}
+
+.task-name {
+  margin: 0;
+  padding: 0;
+}
+
+.task-done {
   text-decoration: line-through;
 }

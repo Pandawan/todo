@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import moment from 'moment';
 import List from './List';
 import FormInput from './FormInput';
 import { firebase, firestore } from '../firebase';
+
+import './ToDo.css';
 
 class ToDo extends Component {
   static dbError(error) {
@@ -87,14 +91,14 @@ class ToDo extends Component {
       });
   }
 
-  handleMarkDone(taskId) {
-    this.db.collection(`users/${this.state.userId}/tasks`).doc(taskId).update({ done: true })
-      .catch(this.dbError);
+  handleMarkDone(taskId, done) {
+    this.db.collection(`users/${this.state.userId}/tasks`).doc(taskId).update({ done })
+      .catch(ToDo.dbError);
   }
 
   handleRemove(taskId) {
     this.db.collection(`users/${this.state.userId}/tasks`).doc(taskId).delete()
-      .catch(this.dbError);
+      .catch(ToDo.dbError);
   }
 
   // When the user submits a new item through form
@@ -106,15 +110,23 @@ class ToDo extends Component {
         created: firebase.firestore.FieldValue.serverTimestamp(),
       };
       // Update on firestore
-      this.db.collection(`users/${this.state.userId}/tasks`).add(value).catch(this.dbError);
+      this.db.collection(`users/${this.state.userId}/tasks`).add(value).catch(ToDo.dbError);
     } else {
-      this.dbError(new Error(`Could not find ${this.state.userId ? '' : 'userId, '}${this.db ? '' : 'db,'} please try again.`));
+      ToDo.dbError(new Error(`Could not find ${this.state.userId ? '' : 'userId, '}${this.db ? '' : 'db,'} please try again.`));
     }
   }
 
   render() {
     return (
-      <div className="todo">
+      <div className="todo bot-line">
+        <div className="header">
+          <div className="header-content container">
+            <div className="header-title">
+              <h1>Hello{this.props.user ? `, ${this.props.user.displayName}` : ''}</h1>
+              <h3>{ moment().format('dddd, MMMM D') }</h3>
+            </div>
+          </div>
+        </div>
         <List
           items={this.state.tasks}
           handleMarkDone={this.handleMarkDone}
@@ -125,5 +137,9 @@ class ToDo extends Component {
     );
   }
 }
+
+ToDo.propTypes = {
+  user: PropTypes.shape({ displayName: PropTypes.string }).isRequired,
+};
 
 export default ToDo;

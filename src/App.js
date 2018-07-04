@@ -28,9 +28,8 @@ class App extends Component {
   render() {
     return (
       <div className="app">
-        <h1>Hello{this.state.user ? `, ${this.state.user.displayName}` : ''}</h1>
         { this.state.user
-          ? <ToDo ref={(instance) => { this.todo = instance; }} />
+          ? <ToDo ref={(instance) => { this.todo = instance; }} user={this.state.user} />
           : <Auth authStateChanged={this.authStateChanged} />
         }
       </div>

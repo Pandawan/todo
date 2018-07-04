@@ -39,7 +39,7 @@ class Auth extends Component {
       this.setState({ user, error: '' });
       localStorage.setItem('userId', user.uid);
     }).catch((error) => {
-      this.authError(`SignIn Error: ${error}`);
+      Auth.authError(`SignIn Error: ${error}`);
       this.setState({ user: null, error });
     });
   }
@@ -48,7 +48,7 @@ class Auth extends Component {
     auth.signOut().then(() => {
       this.setState({ user: null, error: '' });
     }).catch((error) => {
-      this.authError(`SignIn Error: ${error}`);
+      Auth.authError(`SignIn Error: ${error}`);
       this.setState({ error });
     });
   }
@@ -57,7 +57,7 @@ class Auth extends Component {
     return (
       <div className="auth">
         {!this.state.error ? ''
-          : <p className="error">{this.state.error}</p>
+          : <p className="error">{this.state.error.message}</p>
         }
         {this.state.user
           ? (
