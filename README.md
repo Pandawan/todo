@@ -1,6 +1,7 @@
 # ToDo
 A simple todo list web app to learn React & PWA.  
 It syncs automatically using Firebase and Google SignIn.
+Header pictures are from [Unsplash](https://unsplash.com/collections/1364150/landscapes).
 
 ![Screenshot of the app](https://i.imgur.com/WQLVXiX.png)
 
